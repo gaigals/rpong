@@ -3,3 +3,6 @@ target/
 **/*.wasm
 **/.DS_Store
 .DS_Store
+server/www/***/rpong.js
+server/www/***/rpong.wasm
+
