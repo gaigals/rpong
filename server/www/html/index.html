@@ -1,0 +1,25 @@
+{{ define "layout" }}
+
+    <!DOCTYPE html>
+    <html>
+        <head>
+             <script type="module">
+                import init, { add } from '/static/js/rpong.js';
+            
+                async function run() {
+                    await init();
+                    const result = add(1, 2);
+                    console.log(`1 + 2 = ${result}`);
+                    if (result !== 3)
+                    throw new Error("wasm addition doesn't work!");
+                }
+                
+                run();
+             </script>
+        </head>
+        <body>
+            <h1>Hello, World!</h1>
+        </body>
+    <html>
+
+{{ end }}
