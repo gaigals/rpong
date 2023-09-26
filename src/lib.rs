@@ -14,7 +14,7 @@ pub fn init_panic_hook() {
 pub fn main() -> Result<(), JsValue> {
     console::log_1(&"Hello from rust".into());
 
-    let dom = html_obj::Dom::new()?
+    let dom = html_obj::Dom::new()?;
     let mut canvas = html_obj::Canvas::new(&dom)?;
 
     // Required to adjust new size of canvas offset.
