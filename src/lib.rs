@@ -54,16 +54,16 @@ pub fn main() -> Result<(), JsValue> {
     //                     .unwrap();
 
     // Required to adjust new size of canvas offset.
-    canvas.context_2d.scale(1., 1.).unwrap();
+    canvas.context_2d.as_ref().unwrap().scale(1., 1.).unwrap();
 
-    let( canvas_width, canvas_height) = size(&canvas.container); 
+    let( canvas_width, canvas_height) = size(canvas.container.as_ref().unwrap());
     
     // Dots left.
-    canvas.context_2d.fill_rect(0., 0., 2., 2.);
-    canvas.context_2d.fill_rect(0., canvas_height as f64- 2., 2., 2.);
+    canvas.context_2d.as_ref().unwrap().fill_rect(0., 0., 2., 2.);
+    canvas.context_2d.as_ref().unwrap().fill_rect(0., canvas_height as f64- 2., 2., 2.);
     // Dots right;
-    canvas.context_2d.fill_rect(canvas_width as f64 - 2., 0., 2., 2.);
-    canvas.context_2d.fill_rect(canvas_width as f64, canvas_height as f64- 2., 2., 2.);
+    canvas.context_2d.as_ref().unwrap().fill_rect(canvas_width as f64 - 2., 0., 2., 2.);
+    canvas.context_2d.as_ref().unwrap().fill_rect(canvas_width as f64, canvas_height as f64- 2., 2., 2.);
     
 
     // let val = dom.document.create_element("p")?;

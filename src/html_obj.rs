@@ -47,88 +47,75 @@ impl Dom {
 
 #[derive(Debug)]
 pub struct Canvas {
-    pub container       :web_sys::HtmlElement,
-    canvas              :web_sys::HtmlCanvasElement,
-    pub context_2d      :web_sys::CanvasRenderingContext2d,
+    pub container       :Option<web_sys::HtmlElement>,
+    canvas              :Option<web_sys::HtmlCanvasElement>,
+    pub context_2d      :Option<web_sys::CanvasRenderingContext2d>,
     test                :u32,
 }
 
-impl Canvas {
-    pub fn new(dom :&Dom) -> Result<Canvas, String> {
-        let canvas = Canvas{};
-
-        let container = find_container(dom)?;
-        create_canvas(&container);
-        let canvas = select_canvas(dom)?;
-        let context_2d = select_context_2d(&canvas)?;
-
-        Ok(Canvas { container, canvas, context_2d })
-    }
+// Implementing the Default trait for Canvas
+impl Default for Canvas {
     fn default() -> Self {
-        unsafe {
-            let mut my_struct :Canvas = mem::zeroed();
-            my_struct.test = 1;
-            my_struct
+        Self {
+            container: None,
+            canvas: None,
+            context_2d: None,
+            test: 0,
         }
     }
+}
+
+impl Canvas {
+    // pub fn new(dom :&Dom) -> Result<Canvas, String> {
+    //     let canvas = Canvas{};
+    //
+    //     let container = find_container(dom)?;
+    //     create_canvas(&container);
+    //     let canvas = select_canvas(dom)?;
+    //     let context_2d = select_context_2d(&canvas)?;
+    //
+    //     Ok(Canvas { container, canvas, context_2d })
+    // }
+
 
     pub fn new(dom :&Dom) -> Result<Canvas, String> {
-        let mut canvas_objd = Canvas::default();
+        let mut canvas_obj = Canvas::default();
 
         // canvas_obj.container = canvas_obj.find_container(dom)?;
         canvas_obj.find_container(dom)?;
         console::log_1(&"after".into());
-        create_canvas(&canvas_obj.container);
-        canvas_obj.canvas = select_canvas(dom)?;
-        canvas_obj.context_2d = select_context_2d(&canvas_obj.canvas)?;
+        create_canvas(&canvas_obj.container.as_ref().unwrap());
+        canvas_obj.canvas = Some(select_canvas(dom)?);
+        // canvas_obj.context_2d = select_context_2d(canvas_obj.canvas?);
+        canvas_obj.context_2d = Some(select_context_2d(canvas_obj.canvas.as_ref().unwrap())?);
 
         // Ok(Canvas { container, canvas, context_2d, test: 1 })
         Ok(canvas_obj)
-    } 
+    }
 
     fn find_container(&mut self, dom :&Dom) -> Result<(), String> {
         console::log_1(&"0".into());
-        let container_element_result = dom.document.get_element_by_id(CANVAS_CONTAINER_ID);
-        if container_element_result == None {
-            return Err("failed to find 'canvas container' element".to_string());
-        }
-    
-        let container_element = container_element_result.unwrap();
-    
-        let container_html_element_result = container_element.dyn_into::<web_sys::HtmlElement>();
+
+        let container_element = dom.document.
+            get_element_by_id(CANVAS_CONTAINER_ID).
+            ok_or("failed to find 'canvas container' element".to_string())?;
+
+        let container_html_element_result = container_element.
+            dyn_into::<web_sys::HtmlElement>();
         if container_html_element_result.is_err() {
             return Err("failed to find 'canvas container' HTML element".to_string());
         }
 
         let container = container_html_element_result.unwrap();
+
         console::log_1(&"11".into());
         console::log_1(&format!{"{:?}\n", container}.into());
-        self.container = container;
-        self.test = 2;
+
+        self.container = Some(container);
         console::log_1(&format!{"{:?}\n", self}.into());
         return Ok(())
     }
 
-    // fn find_container(&self, dom :&Dom) -> Result<HtmlElement, String> {
-    //     console::log_1(&"0".into());
-    //     let container_element_result = dom.document.get_element_by_id(CANVAS_CONTAINER_ID);
-    //     if container_element_result == None {
-    //         return Err("failed to find 'canvas container' element".to_string());
-    //     }
-    
-    //     let container_element = container_element_result.unwrap();
-    
-    //     let container_html_element_result = container_element.dyn_into::<web_sys::HtmlElement>();
-    //     if container_html_element_result.is_err() {
-    //         return Err("failed to find 'canvas container' HTML element".to_string());
-    //     }
-
-    //     let container = container_html_element_result.unwrap();
-    //     console::log_1(&"11".into());
-    //     console::log_1(&format!{"{:?}\n", container}.into());
-    //     console::log_1(&format!{"{:?}\n", self}.into());
-    //     return Ok(container)
-    // }
 }
 
 fn find_container(dom :&Dom) -> Result<HtmlElement, String> {
