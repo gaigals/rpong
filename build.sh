@@ -1,6 +1,9 @@
 #!/bin/bash
 
-PROJECT_DIR=$(pwd)
+# Make sure that it does not matter where you call this script.
+PROJECT_DIR="$(dirname "$(readlink -f "$0")")"
+
+cd $PROJECT_DIR
 
 cargo build --target wasm32-unknown-unknown
 

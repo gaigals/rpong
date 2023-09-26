@@ -3,22 +3,30 @@
     <!DOCTYPE html>
     <html>
         <head>
-             <script type="module">
-                import init, { add } from '/static/js/rpong.js';
-            
+            <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+            <script type="module">
+                import init from '/static/js/rpong.js';
                 async function run() {
                     await init();
-                    const result = add(1, 2);
-                    console.log(`1 + 2 = ${result}`);
-                    if (result !== 3)
-                    throw new Error("wasm addition doesn't work!");
-                }
-                
+                };
                 run();
-             </script>
+            </script>
+             <!-- <script type="module">
+                // import init from '/static/js/rpong.js';
+            
+                // async function run() {}
+                
+                // run();
+
+                import init from '/static/js/rpong.js';
+             </script> -->
         </head>
         <body>
             <h1>Hello, World!</h1>
+
+            <div id="canvas-container">
+                <!-- <canvas id="canvas-display"></canvas> -->
+            </div>
         </body>
     <html>
 
