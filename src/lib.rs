@@ -18,9 +18,6 @@ pub fn main() -> Result<(), JsValue> {
     let dom = Dom::new()?;
     let mut canvas = Canvas::new(&dom)?;
 
-    // Required to adjust new size of canvas offset.
-    canvas.context_2d.as_ref().unwrap().scale(1., 1.).unwrap();
-
     let( canvas_width, canvas_height) = canvas.size();
     
     // Dots left.

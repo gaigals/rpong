@@ -31,6 +31,7 @@ impl Canvas {
         canvas_obj.create_canvas();
         canvas_obj.select_canvas(dom)?;
         canvas_obj.select_context_2d()?;
+        canvas_obj.apply_scale();
 
         Ok(canvas_obj)
     }
@@ -108,5 +109,9 @@ impl Canvas {
 
         self.context_2d = Some(canvas_context_2d_result.unwrap());
         Ok(())
+    }
+    fn apply_scale(&mut self) {
+        // Required to adjust new size of canvas offset.
+        self.context_2d.as_ref().unwrap().scale(1., 1.).unwrap();
     }
 }
