@@ -1,8 +1,9 @@
-mod html_obj;
+mod web;
 
 use wasm_bindgen::prelude::*;
 use web_sys::console;
-
+use web::dom::*;
+use web::canvas::*;
 
 #[wasm_bindgen]
 pub fn init_panic_hook() {
@@ -14,8 +15,8 @@ pub fn init_panic_hook() {
 pub fn main() -> Result<(), JsValue> {
     console::log_1(&"Hello from rust".into());
 
-    let dom = html_obj::Dom::new()?;
-    let mut canvas = html_obj::Canvas::new(&dom)?;
+    let dom = Dom::new()?;
+    let mut canvas = Canvas::new(&dom)?;
 
     // Required to adjust new size of canvas offset.
     canvas.context_2d.as_ref().unwrap().scale(1., 1.).unwrap();

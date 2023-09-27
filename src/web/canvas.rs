@@ -1,47 +1,15 @@
+use super::dom::*;
 use wasm_bindgen::JsCast;
-use std::default::Default;
+use web_sys::*;
+
 
 const CANVAS_CONTAINER_ID:&str = "canvas-container";
 const CANVAS_ID:&str = "canvas-display";
 
-pub struct Dom {
-    window          :web_sys::Window,
-    pub document    :web_sys::Document,
-    pub body        :web_sys::HtmlElement,
-}
-
-impl Dom {
-    pub fn new() -> Result<Dom, String> {
-        let window_result = web_sys::window();
-        if window_result == None {
-            return Err("failed to find 'window' element".to_string());
-        } 
-
-        let window = window_result.unwrap();
-
-        let document_result = window.document();
-        if document_result == None {
-            return Err("failed to find 'document' element".to_string());
-        }
-
-        let document = document_result.unwrap();
-
-        let body_result = document.body();
-        if body_result == None {
-            return Err("failed to find 'body' element".to_string());
-        }
-
-        let body = body_result.unwrap(); 
-
-        Ok(Dom{ window, document, body })
-    }
-}
-
-#[derive(Debug)]
 pub struct Canvas {
-    pub container       :Option<web_sys::HtmlElement>,
-    canvas              :Option<web_sys::HtmlCanvasElement>,
-    pub context_2d      :Option<web_sys::CanvasRenderingContext2d>,
+    pub container       :Option<HtmlElement>,
+    canvas              :Option<HtmlCanvasElement>,
+    pub context_2d      :Option<CanvasRenderingContext2d>,
 }
 
 // Implementing the Default trait for Canvas
@@ -82,7 +50,7 @@ impl Canvas {
             ok_or("failed to find 'canvas container' element".to_string())?;
 
         let container_html_element_result = container_element.
-            dyn_into::<web_sys::HtmlElement>();
+            dyn_into::<HtmlElement>();
         if container_html_element_result.is_err() {
             return Err("failed to find 'canvas container' HTML element".to_string());
         }
@@ -105,7 +73,7 @@ impl Canvas {
             ok_or("failed to find 'canvas' element".to_string())?;
 
         // Canvas casting as HTMLElement
-        let canvas_html_element = canvas.dyn_into::<web_sys::HtmlCanvasElement>();
+        let canvas_html_element = canvas.dyn_into::<HtmlCanvasElement>();
         if canvas_html_element.is_err() {
             return Err("failed to find 'canvas' HTML element".to_string());
         }
@@ -133,7 +101,7 @@ impl Canvas {
         // Canvas 2D casting as CanvasRenderingContext2d
 
         let canvas_context_2d_result = canvas_context_object.
-            dyn_into::<web_sys::CanvasRenderingContext2d>();
+            dyn_into::<CanvasRenderingContext2d>();
         if canvas_context_2d_result.is_err() {
             return Err("failed to cast canvas object as context2D".to_string());
         }
