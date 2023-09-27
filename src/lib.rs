@@ -1,22 +1,31 @@
+mod web;
+
 use wasm_bindgen::prelude::*;
+use web_sys::console;
+use web::dom::*;
+use web::canvas::*;
 
 #[wasm_bindgen]
-pub fn add(a: u32, b: u32) -> u32 {
-    a + b
+pub fn init_panic_hook() {
+    console_error_panic_hook::set_once();
 }
 
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
-    let window = web_sys::window().expect("no global `window` exists");
-    let document = window.document().expect("should have a document on window");
-    let body = document.body().expect("document should have a body");
+    console::log_1(&"Hello from rust".into());
 
-    // Manufacture the element we're gonna append
-    let val = document.create_element("p")?;
-    val.set_inner_html("Hello from Rust!");
+    let dom = Dom::new()?;
+    let mut canvas = Canvas::new(&dom)?;
 
-    body.append_child(&val)?;
+    let( canvas_width, canvas_height) = canvas.size();
+    
+    // Dots left.
+    canvas.draw_pixel(0., 0., 2., 2.);
+    canvas.draw_pixel(0., canvas_height as f64- 2., 2., 2.);
+    // Dots right;
+    canvas.draw_pixel(canvas_width as f64 - 2., 0., 2., 2.);
+    canvas.draw_pixel(canvas_width as f64 - 2., canvas_height as f64 - 2., 2., 2.);
 
     Ok(())
 }

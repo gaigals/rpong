@@ -1,8 +1,17 @@
 #!/bin/bash
 
-PROJECT_DIR=$(pwd)
+ORIGINAL_DIR=$(pwd)
+
+# Make sure that it does not matter where you call this script.
+PROJECT_DIR="$(dirname "$(readlink -f "$0")")"
+
+cd $PROJECT_DIR
 
 cargo build --target wasm32-unknown-unknown
+if [ $? -ne 0 ]; then
+    cd $ORIGINAL_DIR
+    exit
+fi
 
 cd target/wasm32-unknown-unknown/debug/
 wasm-bindgen --target web --no-typescript --out-dir . rpong.wasm
@@ -18,5 +27,5 @@ cp rpong.js $PROJECT_DIR/server/www/static/js/
 
 cd $PROJECT_DIR/server
 go build -o $PROJECT_DIR/rpong
-cd $PROJECT_DIR
-sudo ./rpong
+cd $ORIGINAL_DIR
+sudo $PROJECT_DIR/rpong
